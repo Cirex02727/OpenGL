@@ -144,7 +144,6 @@ private:
 
     std::unique_ptr<Camera> m_Camera;
     std::unique_ptr<Shader> m_Shader;
-    std::unique_ptr<VertexArray> m_VAO;
 
     std::unique_ptr<WorldGenerator> m_Generator;
     std::unordered_map<glm::ivec2, std::unique_ptr<Chunk>> m_Chunks;
@@ -153,101 +152,10 @@ private:
 
     void Init()
     {
-        float positions[] = {
-            /* Back Face -Z */
-             0.5f,  0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-            -0.5f,  0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-
-            /* Front Face +Z */
-            -0.5f,  0.5f,  0.5f,
-            -0.5f, -0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-             0.5f, -0.5f,  0.5f,
-
-            /* Left Face -X */
-            -0.5f,  0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            -0.5f,  0.5f,  0.5f,
-            -0.5f, -0.5f,  0.5f,
-
-            /* Right Face +X */
-             0.5f,  0.5f,  0.5f,
-             0.5f, -0.5f,  0.5f,
-             0.5f,  0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-
-            /* Bottom Face -Y */
-            -0.5f, -0.5f,  0.5f,
-            -0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f,  0.5f,
-             0.5f, -0.5f, -0.5f,
-
-            /* Top Face +Y */
-             0.5f,  0.5f,  0.5f,
-             0.5f,  0.5f, -0.5f,
-            -0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f, -0.5f,
-        };
-
-        unsigned int indices[] = {
-            /* Back Face -Z */
-             0,  1,  2,
-             1,  3,  2,
-
-            /* Front Face +Z */
-             4,  5,  6,
-             5,  7,  6,
-
-            /* Left Face -X */
-             8,  9, 10,
-             9, 11, 10,
-
-            /* Left Face +X */
-            12, 13, 14,
-            13, 15, 14,
-
-            /* Left Face -Y */
-            16, 17, 18,
-            17, 19, 18,
-
-            /* Left Face +Y */
-            20, 21, 22,
-            21, 23, 22,
-        };
-        
-        m_VAO = std::make_unique<VertexArray>();
-        VertexBufferLayout layout;
-        layout.Push<float>(3);
-
-        m_VAO->AddBuffer(positions, sizeof(positions), layout);
-        m_VAO->AddIndexBuffer(indices, sizeof(indices), GL_UNSIGNED_INT);
-
         m_Shader = std::make_unique<Shader>("res/shaders/basic.shader");
         m_Camera = std::make_unique<Camera>(70.0f, m_Width, m_Height, 0.01f, 10000.0f);
 
         m_Generator = std::make_unique<WorldGenerator>();
-        
-        /*
-        {
-            InstrumentationTimer timer("Create All Chunks!");
-
-            m_Generator->PrepareGenerate();
-
-            std::this_thread::sleep_for(std::chrono::nanoseconds(10));
-
-            for (unsigned short z = 0; z < 40; z++)
-            {
-                for (unsigned short x = 0; x < 40; x++)
-                {
-                    InstrumentationTimer timer("Make Chunk!");
-
-                    m_Chunks.push_back(std::make_unique<Chunk>(m_Generator.get(), x, z));
-                }
-            }
-        }
-        */
     }
 
     void Update(float dt)
@@ -265,7 +173,7 @@ private:
                         continue;
 
                     InstrumentationTimer timer("Make Chunk!");
-
+                    
                     m_Chunks[glm::ivec2(x, z)] = std::make_unique<Chunk>(m_Generator.get(), x, z);
 
                     heap--;
@@ -286,15 +194,6 @@ private:
         {
             chunk.second->Render(m_Camera.get(), m_Shader.get(), m_VisibleChunks);
         }
-
-        /*
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), m_Translation);
-        glm::mat4 mvp = m_Camera->GetProjMatrix() * m_Camera->GetViewMatrix() * model;
-        m_Shader->Bind();
-        m_Shader->SetUniformMat4f("u_MVP", mvp);
-        m_VAO->Bind();
-        glDrawElements(GL_TRIANGLES, m_VAO->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
-        */
     }
 
     void ImGuiRender(float dt)
@@ -314,7 +213,6 @@ private:
 
     void Close()
     {
-        m_VAO.reset();
         m_Generator.reset();
         m_Shader.reset();
         m_Camera.reset();
