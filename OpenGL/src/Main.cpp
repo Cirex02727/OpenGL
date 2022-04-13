@@ -1,7 +1,7 @@
-#include <Engine.cpp>
+#include "Application.h"
 
 int main(void)
 {
-	Engine engine;
-	return engine.Run();
+	Application application;
+	return application.Run();
 }
