@@ -22,4 +22,6 @@ public:
     static unsigned char* TOP;
 
     static unsigned char* INDICES;
+
+    static unsigned char* UVS;
 };

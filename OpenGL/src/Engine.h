@@ -14,7 +14,7 @@ protected:
 
     virtual void Close() = 0;
 
-    void SetSize(float width, float height);
+    void SetSize(int width, int height);
 
 public:
     Engine();

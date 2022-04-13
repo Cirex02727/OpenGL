@@ -16,5 +16,5 @@ public:
 	~WorldGenerator();
 
 	void PrepareGenerate();
-	unsigned int Generate(unsigned long long x, unsigned long long y, unsigned long long z) const;
+	unsigned int Generate(double x, double y, double z) const;
 };

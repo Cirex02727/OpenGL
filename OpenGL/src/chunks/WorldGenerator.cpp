@@ -10,10 +10,11 @@ WorldGenerator::WorldGenerator()
 
 	int seed = std::rand();
 	m_Noise = std::make_unique<FastNoise>(seed); // For seed: std::make_unique<FastNoise>(934865);
-	m_Noise->SetFrequency(0.03f);
+	m_Noise->SetFrequency(0.01f);
 	m_Noise->SetFractalType(FastNoise::FractalType::FBM);
-	m_Noise->SetFractalOctaves(8);
-	m_Noise->SetFractalLacunarity(10.0f);
+	m_Noise->SetInterp(FastNoise::Interp::Linear);
+	m_Noise->SetFractalOctaves(4);
+	m_Noise->SetFractalLacunarity(0.001f);
 
 	std::cout << "Generating World - Seed: " << seed << std::endl;
 }
@@ -28,11 +29,11 @@ void WorldGenerator::PrepareGenerate()
 	m_Dirt = Blocks::FindBlock("dirt")->GetID();
 }
 
-unsigned int WorldGenerator::Generate(unsigned long long x, unsigned long long y, unsigned long long z) const
+unsigned int WorldGenerator::Generate(double x, double y, double z) const
 {
-	double noiseV = ((m_Noise->GetSimplex((double) x, (double) z)) + 1.0) / 2.0;
+	double noiseV = m_Noise->GetSimplex(x, z) * Chunk::c_ChunkHeight / 8 + 20;
 
-	if (noiseV > glm::smoothstep(0.25f, 1.0f, (float)y / (float)Chunk::c_ChunkSize))
+	if (y <= std::max(noiseV, 0.0))
 		return m_Dirt + 1;
 	else
 		return 0;

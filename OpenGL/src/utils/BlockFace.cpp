@@ -63,3 +63,12 @@ unsigned char* BlockFace::INDICES = new unsigned char[] {
     0, 1, 2,
     1, 3, 2,
 };
+
+unsigned char* BlockFace::UVS = new unsigned char[] {
+    0, 0,  // 0
+    0, 1,  // 1
+    1, 0,  // 2
+    0, 1,  // 1
+    1, 1,  // 3
+    1, 0,  // 2
+};

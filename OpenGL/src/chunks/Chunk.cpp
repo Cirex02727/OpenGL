@@ -17,7 +17,7 @@
 Chunk::Chunk(WorldGenerator* generator, unsigned int chunkX, unsigned int chunkZ)
 	: m_Generator(generator), m_ChunkX(chunkX), m_ChunkZ(chunkZ), m_GlobalChunkX(chunkX * c_ChunkSize), m_GlobalChunkZ(chunkZ * c_ChunkSize)
 {
-	m_Aabb = { glm::vec3(m_GlobalChunkX + c_ChunkSize / 2, c_ChunkHeight / 2, m_GlobalChunkZ + c_ChunkSize / 2), glm::vec3(c_ChunkSize / 2, c_ChunkHeight / 2, c_ChunkSize / 2) };
+	m_Aabb = { glm::vec3(m_GlobalChunkX + c_ChunkSize / 2, c_ChunkHeight / 2, m_GlobalChunkZ + c_ChunkSize / 2), glm::vec3(c_ChunkSize, c_ChunkHeight, c_ChunkSize) };
 
 	{
 		InstrumentationTimer timer("Creating Chunk!");
@@ -79,12 +79,12 @@ void Chunk::Build()
 					int a = 0;
 				}
 
-				if (GetGlobalBlockType(x + 1, y, z) == 0) AddFace(vect, x, y, z, current, FaceSide::FRONT,  BlockFace::FRONT );
-				if (GetGlobalBlockType(x - 1, y, z) == 0) AddFace(vect, x, y, z, current, FaceSide::BACK,   BlockFace::BACK  );
-				if (GetGlobalBlockType(x, y + 1, z) == 0) AddFace(vect, x, y, z, current, FaceSide::TOP,    BlockFace::TOP   );
-				if (GetGlobalBlockType(x, y - 1, z) == 0) AddFace(vect, x, y, z, current, FaceSide::BOTTOM, BlockFace::BOTTOM);
-				if (GetGlobalBlockType(x, y, z + 1) == 0) AddFace(vect, x, y, z, current, FaceSide::RIGHT,  BlockFace::RIGHT );
-				if (GetGlobalBlockType(x, y, z - 1) == 0) AddFace(vect, x, y, z, current, FaceSide::LEFT,   BlockFace::LEFT  );
+				if (GetGlobalBlockType(x + 1, y, z) == 0) AddFace(vect, x, y, z, current, FaceSide::FRONT , BlockFace::FRONT , BlockFace::UVS);
+				if (GetGlobalBlockType(x - 1, y, z) == 0) AddFace(vect, x, y, z, current, FaceSide::BACK  , BlockFace::BACK  , BlockFace::UVS);
+				if (GetGlobalBlockType(x, y + 1, z) == 0) AddFace(vect, x, y, z, current, FaceSide::TOP   , BlockFace::TOP   , BlockFace::UVS);
+				if (GetGlobalBlockType(x, y - 1, z) == 0) AddFace(vect, x, y, z, current, FaceSide::BOTTOM, BlockFace::BOTTOM, BlockFace::UVS);
+				if (GetGlobalBlockType(x, y, z + 1) == 0) AddFace(vect, x, y, z, current, FaceSide::RIGHT , BlockFace::RIGHT , BlockFace::UVS);
+				if (GetGlobalBlockType(x, y, z - 1) == 0) AddFace(vect, x, y, z, current, FaceSide::LEFT  , BlockFace::LEFT  , BlockFace::UVS);
 			}
 		}
 	}
@@ -98,12 +98,12 @@ void Chunk::Build()
 
 	for (const auto& point : points)
 	{
-		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::FRONT, BlockFace::FRONT);
-		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::BACK, BlockFace::BACK);
-		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::RIGHT, BlockFace::RIGHT);
-		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::LEFT, BlockFace::LEFT);
-		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::TOP, BlockFace::TOP);
-		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::BOTTOM, BlockFace::BOTTOM);
+		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::FRONT , BlockFace::FRONT , BlockFace::UVS);
+		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::BACK  , BlockFace::BACK  , BlockFace::UVS);
+		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::RIGHT , BlockFace::RIGHT , BlockFace::UVS);
+		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::LEFT  , BlockFace::LEFT  , BlockFace::UVS);
+		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::TOP   , BlockFace::TOP   , BlockFace::UVS);
+		AddFace(vect, point.x, point.y, point.z, &index, FaceSide::BOTTOM, BlockFace::BOTTOM, BlockFace::UVS);
 	}
 	*/
 	
@@ -124,17 +124,18 @@ void Chunk::Build()
 	m_VAO->AddBuffer(buffer.data(), static_cast<unsigned int>(buffer.size() * sizeof(unsigned int)), layout);
 }
 
-void Chunk::AddFace(std::vector<unsigned int>* vector, unsigned short x, unsigned short y, unsigned short z, unsigned int* type, FaceSide side, unsigned char* vertices)
+void Chunk::AddFace(std::vector<unsigned int>* vector, unsigned short x, unsigned short y, unsigned short z, unsigned int* type, FaceSide side, unsigned char* vertices, unsigned char* uvs)
 {
+	unsigned char uv = 0;
 	for(unsigned char i = 0; i < 18;)
 	{
-		vector->push_back(buildVoxelData(x + vertices[i++], y + vertices[i++], z + vertices[i++], (unsigned char) side));
+		vector->push_back(buildVoxelData(x + vertices[i++], y + vertices[i++], z + vertices[i++], (unsigned char) side, uvs[uv++], uvs[uv++]));
 	}
 }
 
-unsigned int Chunk::buildVoxelData(unsigned short x, unsigned short y, unsigned short z, unsigned char side)
+unsigned int Chunk::buildVoxelData(unsigned short x, unsigned short y, unsigned short z, unsigned char side, unsigned char uvx, unsigned char uvy)
 {
-	return (x << 0) | (y << 5) | (z << 13) | (side << 18); // x: 5 - y: 8 - z: 5 - side: 3  |  32-256-32-8
+	return (x << 0) | (y << 5) | (z << 13) | (side << 18) | (uvx << 21) | (uvy << 22); // x: 5 - y: 8 - z: 5 - side: 3 - uvx: 1 - uvy: 1  |  32-256-32-8-2-2
 }
 
 unsigned int* Chunk::GetBlockType(unsigned short x, unsigned short y, unsigned short z)
@@ -149,10 +150,8 @@ unsigned int* Chunk::GetBlockType(unsigned short x, unsigned short y, unsigned s
 
 unsigned int Chunk::GetGlobalBlockType(unsigned short x, unsigned short y, unsigned short z)
 {
-	if (x < 0 || x >= c_ChunkSize ||
-		y < 0 || y >= c_ChunkHeight ||
-		z < 0 || z >= c_ChunkSize)
-		return m_Generator->Generate(m_GlobalChunkX + static_cast<short>(x), static_cast<short>(y), m_GlobalChunkZ + static_cast<short>(z));
+	if (x == 0xFFFF || x >= c_ChunkSize || y == 0xFFFF || z == 0xFFFF || z >= c_ChunkSize)
+		return m_Generator->Generate(m_GlobalChunkX + (x == 0xFFFF ? -1 : x), (y == 0xFFFF ? -1 : y), m_GlobalChunkZ + (z == 0xFFFF ? -1 : z));
 
 	return m_Blocks[INDEX(x, y, z)];
 }

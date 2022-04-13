@@ -14,6 +14,7 @@
 #include "chunks/Blocks.h"
 #include "static/Cursor.h"
 #include "entity/Camera.h"
+#include "render/Loader.h"
 #include "render/Renderer.h"
 #include "utils/Instrumentor.h"
 
@@ -125,13 +126,15 @@ int Engine::Run()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
+    Loader::unloadResources();
+
     Instrumentor::Get().EndSession();
 
     glfwTerminate();
     return 0;
 }
 
-void Engine::SetSize(float width, float height)
+void Engine::SetSize(int width, int height)
 {
     m_Width = width;
     m_Height = height;

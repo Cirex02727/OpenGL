@@ -9,7 +9,7 @@
 
 Camera::Camera(float fov, int width, int height, float nearZ, float farZ)
 	: m_Fov(fov), m_Aspect((float)width / (float)height), m_ZNear(nearZ), m_ZFar(farZ),
-    m_Position(0.0f, 0.0f, -5.0f), m_Front(0.0f, 0.0f, 1.0f), m_Up(0.0f, 1.0f, 0.0f),
+    m_Position(0.0f, 100.0f, 0.0f), m_Front(0.0f, 0.0f, 1.0f), m_Up(0.0f, 1.0f, 0.0f),
     m_CamMoveSpeed(0.01f), m_CamRotSpeed(0.1f), m_Yaw(90.0f), m_Pitch(0.0f),
     m_View(glm::mat4(1.0f))
 {

@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\render\Loader.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\utils\frustum\Frustum.cpp" />
     <ClCompile Include="src\utils\Maths.cpp" />
@@ -322,6 +323,7 @@
     <None Include="src\vendor\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\render\Loader.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Engine.h" />

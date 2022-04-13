@@ -32,13 +32,13 @@ private:
 
 	WorldGenerator* m_Generator;
 	unsigned int m_ChunkX, m_ChunkZ;
-	unsigned int m_GlobalChunkX, m_GlobalChunkZ;
+	double m_GlobalChunkX, m_GlobalChunkZ;
 
 	AABB m_Aabb;
 
 	void Build();
-	unsigned int buildVoxelData(unsigned short x, unsigned short y, unsigned short z, unsigned char side);
-	void AddFace(std::vector<unsigned int>* vector, unsigned short x, unsigned short y, unsigned short z, unsigned int* type, FaceSide side, unsigned char* vertices);
+	unsigned int buildVoxelData(unsigned short x, unsigned short y, unsigned short z, unsigned char side, unsigned char uvx, unsigned char uvy);
+	void AddFace(std::vector<unsigned int>* vector, unsigned short x, unsigned short y, unsigned short z, unsigned int* type, FaceSide side, unsigned char* vertices, unsigned char* uvs);
 
 public:
 	Chunk(WorldGenerator* generator, unsigned int chunkX, unsigned int chunkZ);
