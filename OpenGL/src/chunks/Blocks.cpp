@@ -5,6 +5,7 @@ std::vector<Block> Blocks::m_Blocks;
 void Blocks::Init()
 {
 	RegisterBlock(*Block("dirt").loadTexture("res/textures/dirt.png"));
+	RegisterBlock(*Block("grass").loadTexture("res/textures/grass_side.png"));
 }
 
 void Blocks::RegisterBlock(Block block)

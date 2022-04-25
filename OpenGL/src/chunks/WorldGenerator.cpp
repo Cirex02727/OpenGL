@@ -27,14 +27,18 @@ WorldGenerator::~WorldGenerator()
 void WorldGenerator::PrepareGenerate()
 {
 	m_Dirt = Blocks::FindBlock("dirt")->GetID();
+	m_Grass = Blocks::FindBlock("grass")->GetID();
 }
 
 unsigned int WorldGenerator::Generate(double x, double y, double z) const
 {
 	double noiseV = m_Noise->GetSimplex(x, z) * Chunk::c_ChunkHeight / 8 + 20;
 
-	if (y <= std::max(noiseV, 0.0))
+	if (y == std::max(noiseV, 0.0))
+		return m_Grass + 1;
+	
+	if (y < std::max(noiseV, 0.0))
 		return m_Dirt + 1;
-	else
-		return 0;
+	
+	return 0;
 }
