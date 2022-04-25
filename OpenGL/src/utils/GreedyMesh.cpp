@@ -39,7 +39,7 @@ void GreedyMesh::Calculate(std::unordered_map<unsigned int, std::size_t>* memory
                     // If this block has already been merged, is air, or not visible skip it.
                     bool hasMerged = merged[ MERGE_INDEX(startPos[workAxis1], startPos[workAxis2], Dimensions[workAxis1]) ];
                     if (startBlock == nullptr || hasMerged ||
-                        (startBlock != nullptr && startBlock->IsAir()) ||
+                        (startBlock != nullptr && startBlock->IsLightPass()) ||
                         !IsBlockFaceVisible(chunk, startPos, direction, isBackFace)) {
                         continue;
                     }
@@ -100,7 +100,7 @@ void GreedyMesh::Calculate(std::unordered_map<unsigned int, std::size_t>* memory
 bool GreedyMesh::IsBlockFaceVisible(Chunk* chunk, unsigned short* blockPosition, int axis, bool backFace)
 {
     blockPosition[axis] += backFace ? -1 : 1;
-    return chunk->GetBlock(blockPosition[0], blockPosition[1], blockPosition[2])->IsAir();
+    return chunk->GetBlock(blockPosition[0], blockPosition[1], blockPosition[2])->IsLightPass();
 }
 
 bool GreedyMesh::CompareStep(Chunk* chunk, unsigned short* a, unsigned short* b, int direction, bool backFace)
@@ -108,7 +108,7 @@ bool GreedyMesh::CompareStep(Chunk* chunk, unsigned short* a, unsigned short* b,
     Block* blockA = chunk->GetBlock(a[0], a[1], a[2]);
     Block* blockB = chunk->GetBlock(b[0], b[1], b[2]);
 
-    return blockA == blockB && !blockB->IsAir() && IsBlockFaceVisible(chunk, b, direction, backFace);
+    return blockA == blockB && !blockB->IsLightPass() && IsBlockFaceVisible(chunk, b, direction, backFace);
 }
 
 void GreedyMesh::AddFace(std::unordered_map<unsigned int, std::size_t>* memoryMap, unsigned short* v1, unsigned short* v2, unsigned short* v3, unsigned short* v4, Block* block, bool backFace)

@@ -66,6 +66,15 @@ void Chunk::Build()
 				unsigned int* current = GetBlockType(x, y, z);
 				if (*current == 0) continue;
 
+				if (*current == 1)
+				{
+					int a = 0;
+				}
+
+				if (*current == 2)
+				{
+					int a = 0;
+				}
 
 				auto vector = m_VerticesData.find(*current);
 				std::vector<unsigned int>* vect;
@@ -82,12 +91,13 @@ void Chunk::Build()
 					int a = 0;
 				}
 
-				if (GetGlobalBlockType(x + 1, y, z) == 0) AddFace(vect, x, y, z, current, FaceSide::FRONT , BlockFace::FRONT , BlockFace::UVS);
-				if (GetGlobalBlockType(x - 1, y, z) == 0) AddFace(vect, x, y, z, current, FaceSide::BACK  , BlockFace::BACK  , BlockFace::UVS);
-				if (GetGlobalBlockType(x, y + 1, z) == 0) AddFace(vect, x, y, z, current, FaceSide::TOP   , BlockFace::TOP   , BlockFace::UVS);
-				if (GetGlobalBlockType(x, y - 1, z) == 0) AddFace(vect, x, y, z, current, FaceSide::BOTTOM, BlockFace::BOTTOM, BlockFace::UVS);
-				if (GetGlobalBlockType(x, y, z + 1) == 0) AddFace(vect, x, y, z, current, FaceSide::RIGHT , BlockFace::RIGHT , BlockFace::UVS);
-				if (GetGlobalBlockType(x, y, z - 1) == 0) AddFace(vect, x, y, z, current, FaceSide::LEFT  , BlockFace::LEFT  , BlockFace::UVS);
+
+				if (Blocks::GetBlock(GetGlobalBlockType(x + 1, y, z))->IsLightPass()) AddFace(vect, x, y, z, current, FaceSide::FRONT , BlockFace::FRONT , BlockFace::UVS);
+				if (Blocks::GetBlock(GetGlobalBlockType(x - 1, y, z))->IsLightPass()) AddFace(vect, x, y, z, current, FaceSide::BACK  , BlockFace::BACK  , BlockFace::UVS);
+				if (Blocks::GetBlock(GetGlobalBlockType(x, y + 1, z))->IsLightPass()) AddFace(vect, x, y, z, current, FaceSide::TOP   , BlockFace::TOP   , BlockFace::UVS);
+				if (Blocks::GetBlock(GetGlobalBlockType(x, y - 1, z))->IsLightPass()) AddFace(vect, x, y, z, current, FaceSide::BOTTOM, BlockFace::BOTTOM, BlockFace::UVS);
+				if (Blocks::GetBlock(GetGlobalBlockType(x, y, z + 1))->IsLightPass()) AddFace(vect, x, y, z, current, FaceSide::RIGHT , BlockFace::RIGHT , BlockFace::UVS);
+				if (Blocks::GetBlock(GetGlobalBlockType(x, y, z - 1))->IsLightPass()) AddFace(vect, x, y, z, current, FaceSide::LEFT  , BlockFace::LEFT  , BlockFace::UVS);
 			}
 		}
 	}

@@ -1,11 +1,24 @@
 #include "Blocks.h"
 
 std::vector<Block> Blocks::m_Blocks;
+std::unique_ptr<Block> Blocks::m_Air(std::make_unique<Block>("air"));
 
 void Blocks::Init()
 {
-	RegisterBlock(*Block("dirt").loadTexture("res/textures/dirt.png"));
-	RegisterBlock(*Block("grass").loadTexture("res/textures/grass_side.png"));
+	Block dirt("dirt");
+	RegisterBlock(*dirt.loadTexture("res/textures/dirt.png"));
+
+	Block glass("glass");
+	glass.setIsTransparent(true);
+	RegisterBlock(*glass.loadTexture("res/textures/glass.png"));
+}
+
+void Blocks::Dellocate()
+{
+	m_Blocks.clear();
+
+	if(m_Air)
+		m_Air.reset();
 }
 
 void Blocks::RegisterBlock(Block block)
@@ -17,7 +30,7 @@ void Blocks::RegisterBlock(Block block)
 Block* Blocks::GetBlock(const unsigned int index)
 {
 	if (index <= 0 || index > m_Blocks.size())
-		return nullptr;
+		return m_Air.get();
 
 	return &m_Blocks.at(index - 1);
 }
@@ -30,5 +43,5 @@ Block* Blocks::FindBlock(const std::string name)
 			return &m_Blocks.at(i);
 			
 	}
-	return nullptr;
+	return m_Air.get();
 }

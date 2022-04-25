@@ -21,8 +21,13 @@ bool GLLogCall(const char* function, const char* file, int line)
 void Renderer::Clear() const
 {
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+    /*
+    GLCall(glEnable(GL_BLEND));
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    GLCall(glEnable(GL_DEPTH_TEST));
     GLCall(glEnable(GL_CULL_FACE));
     GLCall(glCullFace(GL_BACK));
+    */
 }
 
 void Renderer::Draw(const VertexArray& va, const Shader& shader) const

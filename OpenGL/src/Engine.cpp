@@ -66,8 +66,10 @@ int Engine::Run()
         GLCall(glEnable(GL_BLEND));
         GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
         GLCall(glEnable(GL_DEPTH_TEST));
+        /*
         GLCall(glEnable(GL_CULL_FACE));
         GLCall(glCullFace(GL_BACK));
+        */
 
         Renderer render;
 
@@ -126,6 +128,7 @@ int Engine::Run()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
+    Blocks::Dellocate();
     Loader::unloadResources();
 
     Instrumentor::Get().EndSession();

@@ -21,6 +21,7 @@ void Application::Init()
     m_Camera = std::make_unique<Camera>(70.0f, m_Width, m_Height, 0.01f, 10000.0f);
 
     m_Generator = std::make_unique<WorldGenerator>();
+    m_Generator->PrepareGenerate();
 
     Gizmos::create();
 }

@@ -9,7 +9,7 @@ class WorldGenerator
 private:
 	std::unique_ptr<FastNoise> m_Noise;
 
-	unsigned int m_Dirt, m_Grass;
+	unsigned int m_Dirt, m_Glass;
 
 public:
 	WorldGenerator();
