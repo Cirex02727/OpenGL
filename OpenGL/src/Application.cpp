@@ -6,6 +6,7 @@
 
 #include "Engine.h"
 #include "Constants.h"
+#include "utils/Gizmos.h"
 #include "chunks/Chunk.h"
 #include "entity/Camera.h"
 #include "render/Shader.h"
@@ -20,15 +21,19 @@ void Application::Init()
     m_Camera = std::make_unique<Camera>(70.0f, m_Width, m_Height, 0.01f, 10000.0f);
 
     m_Generator = std::make_unique<WorldGenerator>();
+
+    Gizmos::create();
 }
 
 void Application::Update(float dt)
 {
+    Gizmos::clear();
+
     m_Camera->Update(1000.0f / dt);
 
     unsigned short heap = Constants::CHUNK_HEAP;
     {
-        glm::ivec3 renderDistance = m_Camera->GetPosition() / glm::vec3(Chunk::c_ChunkSize);
+        glm::ivec3 renderDistance = m_Camera->GetPosition() / glm::vec3(Chunk::c_ChunkSize * Constants::CHUNK_SCALE);
         for (unsigned short z = std::max(renderDistance.z - Constants::RENDER_DISTANCE, 0); z < renderDistance.z + Constants::RENDER_DISTANCE; z++)
         {
             for (unsigned short x = std::max(renderDistance.x - Constants::RENDER_DISTANCE, 0); x < renderDistance.x + Constants::RENDER_DISTANCE; x++)
@@ -58,6 +63,8 @@ void Application::Render()
     {
         chunk.second->Render(m_Camera.get(), m_Shader.get(), m_VisibleChunks);
     }
+
+    Gizmos::draw(m_Camera->GetViewMatrix(), m_Camera->GetProjMatrix());
 }
 
 void Application::ImGuiRender(float dt)
@@ -85,4 +92,6 @@ void Application::Close()
     {
         it->second.reset();
     }
+
+    Gizmos::destroy();
 }

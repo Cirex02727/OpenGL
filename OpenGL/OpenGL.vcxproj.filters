@@ -111,6 +111,9 @@
     <ClCompile Include="src\render\Loader.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\Gizmos.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.shader" />
@@ -531,6 +534,7 @@
     <None Include="src\vendor\glm\gtx\wrap.inl">
       <Filter>File di intestazione</Filter>
     </None>
+    <None Include="res\shaders\gizmos.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\render\Renderer.h">
@@ -1494,6 +1498,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\render\Loader.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\Gizmos.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

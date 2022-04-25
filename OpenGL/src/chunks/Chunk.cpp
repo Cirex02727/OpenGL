@@ -3,6 +3,8 @@
 #include <iostream>
 #include <memory>
 
+#include "Constants.h"
+#include "utils/Gizmos.h"
 #include "render/Shader.h"
 #include "chunks/Blocks.h"
 #include "utils/BlockFace.h"
@@ -17,7 +19,8 @@
 Chunk::Chunk(WorldGenerator* generator, unsigned int chunkX, unsigned int chunkZ)
 	: m_Generator(generator), m_ChunkX(chunkX), m_ChunkZ(chunkZ), m_GlobalChunkX(chunkX * c_ChunkSize), m_GlobalChunkZ(chunkZ * c_ChunkSize)
 {
-	m_Aabb = { glm::vec3(m_GlobalChunkX + c_ChunkSize / 2, c_ChunkHeight / 2, m_GlobalChunkZ + c_ChunkSize / 2), glm::vec3(c_ChunkSize, c_ChunkHeight, c_ChunkSize) };
+	m_Aabb = { glm::vec3(m_GlobalChunkX + c_ChunkSize / 2, c_ChunkHeight / 2, m_GlobalChunkZ + c_ChunkSize / 2),
+		glm::vec3(c_ChunkSize, c_ChunkHeight, c_ChunkSize) };
 
 	{
 		InstrumentationTimer timer("Creating Chunk!");
@@ -171,7 +174,14 @@ void Chunk::Render(Camera* camera, Shader* shader, int& visibleChunks)
 	if (!IsVisible(camera))
 		return;
 
-	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(m_ChunkX * c_ChunkSize, 0.0f, m_ChunkZ * c_ChunkSize));
+	/*
+	Gizmos::addAABB(glm::vec3(m_GlobalChunkX + c_ChunkSize / 2, c_ChunkHeight / 2, m_GlobalChunkZ + c_ChunkSize / 2),
+		glm::vec3(c_ChunkSize / 2, c_ChunkHeight / 2, c_ChunkSize / 2),
+		glm::vec4(1.0, 1.0, 0.0, 1.0));
+	*/
+
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(m_GlobalChunkX * Constants::CHUNK_SCALE, 0.0f, m_GlobalChunkZ * Constants::CHUNK_SCALE));
+	model = glm::scale(model, glm::vec3(Constants::CHUNK_SCALE));
 	glm::mat4 mvp = camera->GetProjMatrix() * camera->GetViewMatrix() * model;
 	shader->Bind();
 	shader->SetUniformMat4f("u_MVP", mvp);
